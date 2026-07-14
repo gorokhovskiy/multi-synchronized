@@ -1,4 +1,4 @@
-package com.dev.multilock;
+package io.github.gorokhovskiy.multisync;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 /**
  * Deadlock-free acquisition of multiple intrinsic locks via recursive ordering.
  */
-public final class OrderedLocks {
+public final class MultiSynchronized {
 
     private static final Comparator<Object> LOCK_COMPARATOR =
         Comparator.comparingInt(System::identityHashCode);
@@ -18,7 +18,7 @@ public final class OrderedLocks {
     /**
      * Creates an ordered lock group for the given lock objects.
      */
-    public OrderedLocks(Object... locks) {
+    public MultiSynchronized(Object... locks) {
         if (locks == null || locks.length == 0) {
             throw new LockOrderException(
                 "At least one lock object is required."

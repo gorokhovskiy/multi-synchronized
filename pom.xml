@@ -5,14 +5,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dev</groupId>
-    <artifactId>ordered-locks</artifactId>
+    <groupId>io.github.gorokhovskiy</groupId>
+    <artifactId>multi-synchronized</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>Ordered Locks</name>
+    <name>Multi Synchronized</name>
     <description>A lightweight Java library for deadlock-free acquisition of multiple intrinsic (synchronized) locks using recursive ordering.</description>
-    <url>https://github.com/yourusername/ordered-locks</url>
+    <url>https://github.com/gorokhovskiy/multi-synchronized</url>
 
     <licenses>
         <license>
@@ -23,10 +23,16 @@
 
     <developers>
         <developer>
-            <name>Your Name</name>
-            <email>your.email@example.com</email>
+            <name>Konstantin Gorokhovskiy</name>
+            <url>https://github.com/gorokhovskiy</url>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/gorokhovskiy/multi-synchronized.git</connection>
+        <developerConnection>scm:git:https://github.com/gorokhovskiy/multi-synchronized.git</developerConnection>
+        <url>https://github.com/gorokhovskiy/multi-synchronized</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

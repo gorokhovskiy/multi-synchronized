@@ -1,4 +1,4 @@
-package com.dev.multilock;
+package io.github.gorokhovskiy.multisync;
 
 /**
  * Exception thrown when an invalid lock configuration is provided,

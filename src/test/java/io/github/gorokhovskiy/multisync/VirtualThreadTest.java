@@ -1,4 +1,4 @@
-package com.dev.multilock;
+package io.github.gorokhovskiy.multisync;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnJre;
@@ -28,7 +28,7 @@ class VirtualThreadTest {
         AtomicInteger successCount = new AtomicInteger(0);
         
         Thread vThread = Thread.ofVirtual().name("test-vt-1").start(() -> {
-            new OrderedLocks(lockA, lockB)
+            new MultiSynchronized(lockA, lockB)
                 .run(() -> {
                     successCount.incrementAndGet();
                     // Simulate some work
@@ -63,10 +63,10 @@ class VirtualThreadTest {
                 try {
                     // Alternate lock orders to test prevention
                     if (i % 2 == 0) {
-                        new OrderedLocks(lock1, lock2, lock3)
+                        new MultiSynchronized(lock1, lock2, lock3)
                             .run(() -> completedTasks.incrementAndGet());
                     } else {
-                        new OrderedLocks(lock3, lock1, lock2)
+                        new MultiSynchronized(lock3, lock1, lock2)
                             .run(() -> completedTasks.incrementAndGet());
                     }
                 } finally {
@@ -89,7 +89,7 @@ class VirtualThreadTest {
         // This test demonstrates potential pinning with synchronized + blocking I/O
         // In Java 24+, this should NOT pin (JEP 491) 【turn0search0】【turn0search6】
         Thread vThread = Thread.ofVirtual().name("pinning-test").start(() -> {
-            new OrderedLocks(lock).run(() -> {
+            new MultiSynchronized(lock).run(() -> {
                 try {
                     // Blocking operation inside synchronized block
                     Thread.sleep(Duration.ofMillis(100));
@@ -113,8 +113,8 @@ class VirtualThreadTest {
         AtomicInteger syncCounter = new AtomicInteger(0);
         AtomicInteger reentrantCounter = new AtomicInteger(0);
         
-        // Test with synchronized (OrderedLocks)
-        new OrderedLocks(lock1, lock2).run(syncCounter::incrementAndGet);
+        // Test with synchronized (MultiSynchronized)
+        new MultiSynchronized(lock1, lock2).run(syncCounter::incrementAndGet);
         
         // Test with ReentrantLock (manual implementation)
         java.util.concurrent.locks.ReentrantLock rLock1 = new java.util.concurrent.locks.ReentrantLock();

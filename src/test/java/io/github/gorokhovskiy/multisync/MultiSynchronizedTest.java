@@ -1,4 +1,4 @@
-package com.dev.multilock;
+package io.github.gorokhovskiy.multisync;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -10,14 +10,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OrderedLocksTest {
+class MultiSynchronizedTest {
 
     @Test
     void testSingleLockRun() {
         Object lock = new Object();
         AtomicInteger val = new AtomicInteger(0);
         
-        new OrderedLocks(lock).run(val::incrementAndGet);
+        new MultiSynchronized(lock).run(val::incrementAndGet);
         
         assertEquals(1, val.get());
     }
@@ -27,7 +27,7 @@ class OrderedLocksTest {
         Object lock1 = new Object();
         Object lock2 = new Object();
         
-        String result = new OrderedLocks(lock1, lock2)
+        String result = new MultiSynchronized(lock1, lock2)
                                      .call(() -> "Success");
         
         assertEquals("Success", result);
@@ -36,7 +36,7 @@ class OrderedLocksTest {
     @Test
     void testZeroLocksThrowsException() {
         assertThrows(LockOrderException.class, () -> {
-            new OrderedLocks().run(() -> {});
+            new MultiSynchronized().run(() -> {});
         });
     }
 
@@ -45,17 +45,17 @@ class OrderedLocksTest {
         Object lock = new Object();
         
         assertThrows(LockOrderException.class, () -> {
-            new OrderedLocks(lock, lock).run(() -> {});
+            new MultiSynchronized(lock, lock).run(() -> {});
         });
     }
 
     @Test
     void testBlockInstanceReusability() {
-        // Prove that the OrderedLocks instance can be safely reused
+        // Prove that the MultiSynchronized instance can be safely reused
         Object lock1 = new Object();
         Object lock2 = new Object();
         
-        var sharedBlock = new OrderedLocks(lock1, lock2);
+        var sharedBlock = new MultiSynchronized(lock1, lock2);
         
         AtomicInteger counter = new AtomicInteger(0);
         sharedBlock.run(counter::incrementAndGet);
@@ -87,9 +87,9 @@ class OrderedLocksTest {
             boolean reverseOrder = (i % 2 == 0);
             
             // Create the block ONCE per thread to test reusability
-            OrderedLocks block = reverseOrder
-                ? new OrderedLocks(lockC, lockB, lockA)
-                : new OrderedLocks(lockA, lockB, lockC);
+            MultiSynchronized block = reverseOrder
+                ? new MultiSynchronized(lockC, lockB, lockA)
+                : new MultiSynchronized(lockA, lockB, lockC);
 
             executor.submit(() -> {
                 try {

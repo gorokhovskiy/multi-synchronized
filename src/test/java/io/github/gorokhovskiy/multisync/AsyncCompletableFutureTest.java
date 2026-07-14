@@ -1,4 +1,4 @@
-package com.dev.multilock;
+package io.github.gorokhovskiy.multisync;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ class AsyncCompletableFutureTest {
         
         // Run task asynchronously using CompletableFuture
         CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
-            return new OrderedLocks(lockA, lockB)
+            return new MultiSynchronized(lockA, lockB)
                 .call(() -> {
                     // Simulate expensive computation
                     try {
@@ -52,7 +52,7 @@ class AsyncCompletableFutureTest {
         // Create multiple futures that share locks
         List<CompletableFuture<Integer>> futures = IntStream.range(0, 50)
             .mapToObj(i -> CompletableFuture.supplyAsync(() -> {
-                return new OrderedLocks(sharedLock1, sharedLock2)
+                return new MultiSynchronized(sharedLock1, sharedLock2)
                     .call(() -> {
                         // Simulate work
                         try {
@@ -91,7 +91,7 @@ class AsyncCompletableFutureTest {
         try {
             // Simulate a legacy Future-returning method
             Future<String> legacyFuture = executor.submit(() -> {
-                return new OrderedLocks(lock)
+                return new MultiSynchronized(lock)
                     .call(() -> "Legacy Result");
             });
             
@@ -128,7 +128,7 @@ class AsyncCompletableFutureTest {
             
             // Use virtual thread executor with CompletableFuture
             CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
-                return new OrderedLocks(lock)
+                return new MultiSynchronized(lock)
                     .call(() -> {
                         // Simulate I/O-bound operation
                         try {
@@ -153,7 +153,7 @@ class AsyncCompletableFutureTest {
         
         // Create a future that might timeout
         CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
-            return new OrderedLocks(lock)
+            return new MultiSynchronized(lock)
                 .call(() -> {
                     try {
                         Thread.sleep(5000); // Long operation

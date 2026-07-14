@@ -8,4 +8,4 @@
  *
  * @since 1.0.0
  */
-package com.dev.multilock;
+package io.github.gorokhovskiy.multisync;
