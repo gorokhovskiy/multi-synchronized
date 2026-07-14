@@ -17,7 +17,7 @@ class OrderedLocksTest {
         Object lock = new Object();
         AtomicInteger val = new AtomicInteger(0);
         
-        OrderedLocks.multiSynchronized(lock).run(val::incrementAndGet);
+        new OrderedLocks(lock).run(val::incrementAndGet);
         
         assertEquals(1, val.get());
     }
@@ -27,7 +27,7 @@ class OrderedLocksTest {
         Object lock1 = new Object();
         Object lock2 = new Object();
         
-        String result = OrderedLocks.multiSynchronized(lock1, lock2)
+        String result = new OrderedLocks(lock1, lock2)
                                      .call(() -> "Success");
         
         assertEquals("Success", result);
@@ -36,7 +36,7 @@ class OrderedLocksTest {
     @Test
     void testZeroLocksThrowsException() {
         assertThrows(LockOrderException.class, () -> {
-            OrderedLocks.multiSynchronized().run(() -> {});
+            new OrderedLocks().run(() -> {});
         });
     }
 
@@ -45,17 +45,17 @@ class OrderedLocksTest {
         Object lock = new Object();
         
         assertThrows(LockOrderException.class, () -> {
-            OrderedLocks.multiSynchronized(lock, lock).run(() -> {});
+            new OrderedLocks(lock, lock).run(() -> {});
         });
     }
 
     @Test
     void testBlockInstanceReusability() {
-        // Prove that the SynchronizedBlock object can be safely reused
+        // Prove that the OrderedLocks instance can be safely reused
         Object lock1 = new Object();
         Object lock2 = new Object();
         
-        var sharedBlock = OrderedLocks.multiSynchronized(lock1, lock2);
+        var sharedBlock = new OrderedLocks(lock1, lock2);
         
         AtomicInteger counter = new AtomicInteger(0);
         sharedBlock.run(counter::incrementAndGet);
@@ -87,9 +87,9 @@ class OrderedLocksTest {
             boolean reverseOrder = (i % 2 == 0);
             
             // Create the block ONCE per thread to test reusability
-            SynchronizedBlock block = reverseOrder 
-                ? OrderedLocks.multiSynchronized(lockC, lockB, lockA)
-                : OrderedLocks.multiSynchronized(lockA, lockB, lockC);
+            OrderedLocks block = reverseOrder
+                ? new OrderedLocks(lockC, lockB, lockA)
+                : new OrderedLocks(lockA, lockB, lockC);
 
             executor.submit(() -> {
                 try {

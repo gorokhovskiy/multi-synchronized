@@ -21,7 +21,7 @@ class ThreadPoolIntegrationTest {
         ForkJoinPool commonPool = ForkJoinPool.commonPool();
         
         Callable<Integer> task = () -> {
-            return OrderedLocks.multiSynchronized(lockA, lockB)
+            return new OrderedLocks(lockA, lockB)
                 .call(() -> {
                     // Simulate work
                     try {
@@ -55,7 +55,7 @@ class ThreadPoolIntegrationTest {
             for (int i = 0; i < NUM_THREADS; i++) {
                 executor.submit(() -> {
                     try {
-                        OrderedLocks.multiSynchronized(lock1, lock2)
+                        new OrderedLocks(lock1, lock2)
                             .run(() -> {
                                 successCount.incrementAndGet();
                                 // Simulate some work
@@ -99,7 +99,7 @@ class ThreadPoolIntegrationTest {
                         int active = activeThreads.incrementAndGet();
                         maxConcurrency.updateAndGet(current -> Math.max(current, active));
                         
-                        OrderedLocks.multiSynchronized(sharedLock)
+                        new OrderedLocks(sharedLock)
                             .run(() -> {
                                 // Critical section
                                 try {
