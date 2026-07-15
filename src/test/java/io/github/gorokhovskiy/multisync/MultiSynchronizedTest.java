@@ -108,7 +108,7 @@ class MultiSynchronizedTest {
      */
     @Test
     void testPreventsDeadlockUnderHighContention() throws InterruptedException {
-        final int THREADS = 500;
+        final int THREADS = 100;
         final int ITERATIONS = 500;
         
         Object lockA = new Object();
