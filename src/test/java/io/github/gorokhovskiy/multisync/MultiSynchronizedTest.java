@@ -34,6 +34,43 @@ class MultiSynchronizedTest {
     }
 
     @Test
+    void testStaticLockRun() {
+        Object lockA = new Object();
+        Object lockB = new Object();
+        AtomicInteger val = new AtomicInteger(0);
+
+        MultiSynchronized.lock(lockA, lockB).run(val::incrementAndGet);
+
+        assertEquals(1, val.get());
+    }
+
+    @Test
+    void testStaticLockCall() {
+        Object lockA = new Object();
+        Object lockB = new Object();
+
+        String result = MultiSynchronized.lock(lockA, lockB).call(() -> "Success");
+
+        assertEquals("Success", result);
+    }
+
+    @Test
+    void testStaticLockZeroLocksThrowsException() {
+        assertThrows(LockOrderException.class, () -> {
+            MultiSynchronized.lock().run(() -> {});
+        });
+    }
+
+    @Test
+    void testStaticLockDuplicateThrowsException() {
+        Object lock = new Object();
+
+        assertThrows(LockOrderException.class, () -> {
+            MultiSynchronized.lock(lock, lock).run(() -> {});
+        });
+    }
+
+    @Test
     void testZeroLocksThrowsException() {
         assertThrows(LockOrderException.class, () -> {
             new MultiSynchronized().run(() -> {});
@@ -71,8 +108,8 @@ class MultiSynchronizedTest {
      */
     @Test
     void testPreventsDeadlockUnderHighContention() throws InterruptedException {
-        final int THREADS = 100;
-        final int ITERATIONS = 50;
+        final int THREADS = 500;
+        final int ITERATIONS = 500;
         
         Object lockA = new Object();
         Object lockB = new Object();

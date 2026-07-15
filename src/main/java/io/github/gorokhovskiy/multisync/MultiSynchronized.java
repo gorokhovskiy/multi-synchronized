@@ -40,6 +40,13 @@ public final class MultiSynchronized {
     }
 
     /**
+     * Factory for an ordered lock group.
+     */
+    public static MultiSynchronized lock(Object... locks) {
+        return new MultiSynchronized(locks);
+    }
+
+    /**
      * Executes a task while holding all locks.
      */
     public void run(Runnable task) {
