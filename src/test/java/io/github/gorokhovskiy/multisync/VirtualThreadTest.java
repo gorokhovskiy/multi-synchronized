@@ -1,8 +1,6 @@
 package io.github.gorokhovskiy.multisync;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
 
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
